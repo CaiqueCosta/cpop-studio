@@ -1,0 +1,22 @@
+.DS_Store
+
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+.npmrc
+.pypirc
+.netrc
+credentials.json
+service-account*.json
+
+# Private keys and signing material
+*.key
+*.pem
+*.p12
+*.pfx
+*.jks
+*.keystore
+*.mobileprovision
+id_rsa
+id_ed25519

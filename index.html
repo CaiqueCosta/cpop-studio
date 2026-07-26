@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; form-action 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'none'; media-src 'none'; object-src 'none'; frame-src 'none'; worker-src 'none'; manifest-src 'self'; upgrade-insecure-requests">
+  <meta name="referrer" content="no-referrer">
+  <title>CPoP Studio</title>
+  <meta name="description" content="CPoP Studio. Home of Pinta Puzzle and other apps.">
+  <link rel="icon" href="assets/studio-mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="home">
+  <div class="particle-field" aria-hidden="true">
+    <canvas id="particle-canvas"></canvas>
+  </div>
+
+  <header class="site-header">
+    <div class="wrap site-nav">
+      <a class="brand" href="index.html">CPoP Studio</a>
+      <ul class="nav-links">
+        <li><a href="mailto:support@cpopstudio.com">Support</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main class="home-stage">
+    <div class="wrap">
+      <div class="home-brand">
+        <h1 data-text="CPoP Studio">
+          <span class="fizzy-text">CPoP Studio</span>
+        </h1>
+      </div>
+
+      <div class="home-apps" id="apps" data-layout="list">
+        <p class="home-apps-label">Apps</p>
+        <ul class="apps-list">
+          <li>
+            <a href="apps/pinta-puzzle/index.html">
+              <img src="assets/apps/pinta-puzzle/icon.png" width="54" height="54" alt="">
+              <span class="app-copy">
+                <span class="app-name">Pinta Puzzle</span>
+              </span>
+              <span class="app-arrow" aria-hidden="true">→</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p><span class="brand-inline">CPoP Studio</span> · 2026</p>
+      <div class="footer-links">
+        <a href="mailto:support@cpopstudio.com">support@cpopstudio.com</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="particles.js"></script>
+</body>
+</html>
