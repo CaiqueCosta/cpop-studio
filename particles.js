@@ -19,25 +19,31 @@
     "255, 224, 196"    // warm giant (rare)
   ];
 
-  var mouse = { x: 0, y: 0, active: false };
   // Parallax offset, eased toward the mouse position.
   var parallax = { x: 0, y: 0, tx: 0, ty: 0 };
 
   var stars = [];   // twinkling background field, parallax by depth
-  var dust = [];    // cosmic motes that orbit the cursor gravity well
   var beacons = [];  // bright diffraction-spike stars
   var comets = [];  // shooting stars
-  var waves = [];   // click shockwaves
+  var clickFx = []; // active click flares
   var trail = [];   // stardust shed by the flung soda can
 
   function rand(a, b) { return a + Math.random() * (b - a); }
   function pick(arr) { return arr[(Math.random() * arr.length) | 0]; }
 
+  function spawnClickFx(x, y) {
+    clickFx.push({
+      type: "flare",
+      x: x,
+      y: y,
+      life: 1,
+      width: 0,
+      hue: starHues[1]
+    });
+  }
+
   function starCount() {
     return Math.max(60, Math.min(220, Math.floor((width * height) / 7000)));
-  }
-  function dustCount() {
-    return Math.max(24, Math.min(90, Math.floor((width * height) / 20000)));
   }
   function beaconCount() {
     return Math.max(4, Math.min(12, Math.floor((width * height) / 150000)));
@@ -48,22 +54,10 @@
       x: Math.random() * width,
       y: Math.random() * height,
       depth: Math.random(),                 // 0 = far, 1 = near (more parallax)
-      r: rand(0.25, 0.9),
+      r: rand(0.08, 0.32),
       hue: Math.random() < 0.12 ? starHues[4] : pick(starHues),
-      base: rand(0.25, 0.7),
-      tw: rand(0.008, 0.03),
-      phase: Math.random() * Math.PI * 2
-    };
-  }
-
-  function makeDust() {
-    return {
-      x: Math.random() * width,
-      y: Math.random() * height,
-      vx: rand(-0.12, 0.12),
-      vy: rand(-0.12, 0.12),
-      r: rand(0.8, 2.2),
-      hue: pick(starHues),
+      base: rand(0.35, 0.75),
+      tw: rand(0.004, 0.014),
       phase: Math.random() * Math.PI * 2
     };
   }
@@ -72,13 +66,29 @@
     return {
       x: Math.random() * width,
       y: Math.random() * height,
-      depth: rand(0.4, 1),
-      r: rand(1.6, 3),
-      hue: Math.random() < 0.5 ? starHues[0] : pick(starHues),
-      base: rand(0.5, 0.9),
-      tw: rand(0.01, 0.025),
-      phase: Math.random() * Math.PI * 2
+      depth: rand(0.45, 1),
+      r: rand(0.55, 1.05),
+      hue: Math.random() < 0.55 ? starHues[0] : pick(starHues),
+      base: rand(0.55, 0.85),
+      tw: rand(0.005, 0.012),
+      phase: Math.random() * Math.PI * 2,
+      rot: rand(0, Math.PI * 0.5)          // slight tilt so they aren't axis-aligned
     };
+  }
+
+  // Soft 4-point sparkle silhouette (tapered diamond rays, not a plus stroke).
+  function fillSparkle(cx, cy, outerR, innerR, rot) {
+    ctx.beginPath();
+    for (var i = 0; i < 8; i++) {
+      var radius = i % 2 === 0 ? outerR : innerR;
+      var a = rot + (i * Math.PI) / 4;
+      var px = cx + Math.cos(a) * radius;
+      var py = cy + Math.sin(a) * radius;
+      if (i === 0) ctx.moveTo(px, py);
+      else ctx.lineTo(px, py);
+    }
+    ctx.closePath();
+    ctx.fill();
   }
 
   function spawnComet() {
@@ -110,32 +120,21 @@
     while (stars.length < sTarget) stars.push(makeStar());
     while (stars.length > sTarget) stars.pop();
 
-    var dTarget = reduceMotion ? 0 : dustCount();
-    while (dust.length < dTarget) dust.push(makeDust());
-    while (dust.length > dTarget) dust.pop();
-
     var bTarget = beaconCount();
     while (beacons.length < bTarget) beacons.push(makeBeacon());
     while (beacons.length > bTarget) beacons.pop();
   }
 
   function onPointerMove(event) {
-    mouse.active = true;
-    mouse.x = event.clientX;
-    mouse.y = event.clientY;
     parallax.tx = (event.clientX / width - 0.5);
     parallax.ty = (event.clientY / height - 0.5);
   }
 
-  function onPointerLeave() {
-    mouse.active = false;
-  }
-
   function onPointerDown(event) {
-    // Ignore clicks that originate on the draggable can.
+    // Ignore clicks on the can.
     if (event.target && event.target.closest && event.target.closest(".soda-can")) return;
     if (reduceMotion) return;
-    waves.push({ x: event.clientX, y: event.clientY, r: 0, life: 1 });
+    spawnClickFx(event.clientX, event.clientY);
   }
 
   // ---- Drawing ---------------------------------------------------------
@@ -144,112 +143,68 @@
     for (var i = 0; i < stars.length; i++) {
       var s = stars[i];
       s.phase += s.tw;
-      var tw = s.base + Math.sin(s.phase) * 0.35;
-      if (tw < 0.04) tw = 0.04;
+      // Gentle shimmer — never fully dims out.
+      var tw = s.base + Math.sin(s.phase) * 0.14;
+      if (tw < 0.2) tw = 0.2;
       var px = s.x + parallax.x * (6 + s.depth * 34);
       var py = s.y + parallax.y * (6 + s.depth * 34);
-      var r = s.r * (1 + s.depth * 0.35);
+      var r = s.r * (1 + s.depth * 0.4);
+      var glowR = r * (3.8 + s.depth * 1.2);
+
+      // Soft atmospheric bloom so distant stars read as points of light.
+      var glow = ctx.createRadialGradient(px, py, 0, px, py, glowR);
+      glow.addColorStop(0, "rgba(" + s.hue + "," + (tw * 0.55) + ")");
+      glow.addColorStop(0.45, "rgba(" + s.hue + "," + (tw * 0.18) + ")");
+      glow.addColorStop(1, "rgba(" + s.hue + ", 0)");
+      ctx.fillStyle = glow;
       ctx.beginPath();
-      ctx.fillStyle = "rgba(" + s.hue + "," + tw + ")";
-      ctx.arc(px, py, r, 0, Math.PI * 2);
+      ctx.arc(px, py, glowR, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Hot white core.
+      ctx.beginPath();
+      ctx.fillStyle = "rgba(255,255,255," + Math.min(1, tw + 0.2) + ")";
+      ctx.arc(px, py, Math.max(0.35, r * 0.55), 0, Math.PI * 2);
       ctx.fill();
     }
   }
 
   function drawBeacon(b) {
     b.phase += b.tw;
-    var tw = b.base + Math.sin(b.phase) * 0.3;
-    if (tw < 0.1) tw = 0.1;
+    var tw = b.base + Math.sin(b.phase) * 0.12;
+    if (tw < 0.35) tw = 0.35;
     var px = b.x + parallax.x * (10 + b.depth * 40);
     var py = b.y + parallax.y * (10 + b.depth * 40);
-    var spike = b.r * (5 + Math.sin(b.phase) * 1.2);
+    var coreR = b.r * (1 + Math.sin(b.phase) * 0.08);
+    var haloR = coreR * 9;
+    var sparkleOuter = coreR * (4.2 + Math.sin(b.phase + 1.1) * 0.35);
+    var sparkleInner = coreR * 0.55;
 
-    // Soft glow.
-    var g = ctx.createRadialGradient(px, py, 0, px, py, b.r * 7);
-    g.addColorStop(0, "rgba(" + b.hue + "," + (tw * 0.5) + ")");
-    g.addColorStop(1, "rgba(" + b.hue + ", 0)");
-    ctx.fillStyle = g;
+    // Wide soft halo.
+    var halo = ctx.createRadialGradient(px, py, 0, px, py, haloR);
+    halo.addColorStop(0, "rgba(" + b.hue + "," + (tw * 0.45) + ")");
+    halo.addColorStop(0.35, "rgba(" + b.hue + "," + (tw * 0.16) + ")");
+    halo.addColorStop(1, "rgba(" + b.hue + ", 0)");
+    ctx.fillStyle = halo;
     ctx.beginPath();
-    ctx.arc(px, py, b.r * 7, 0, Math.PI * 2);
+    ctx.arc(px, py, haloR, 0, Math.PI * 2);
     ctx.fill();
 
-    // Diffraction spikes.
-    ctx.strokeStyle = "rgba(" + b.hue + "," + (tw * 0.8) + ")";
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(px - spike, py);
-    ctx.lineTo(px + spike, py);
-    ctx.moveTo(px, py - spike);
-    ctx.lineTo(px, py + spike);
-    ctx.stroke();
+    // Tapered 4-point sparkle body (reads as a star, not a plus).
+    ctx.fillStyle = "rgba(" + b.hue + "," + (tw * 0.55) + ")";
+    fillSparkle(px, py, sparkleOuter, sparkleInner, b.rot || 0);
+    ctx.fillStyle = "rgba(255,255,255," + (tw * 0.7) + ")";
+    fillSparkle(px, py, sparkleOuter * 0.72, sparkleInner * 0.7, b.rot || 0);
 
-    // Core.
+    // Bright circular core on top.
+    var core = ctx.createRadialGradient(px, py, 0, px, py, coreR * 2.2);
+    core.addColorStop(0, "rgba(255,255,255," + Math.min(1, tw + 0.2) + ")");
+    core.addColorStop(0.55, "rgba(" + b.hue + "," + (tw * 0.5) + ")");
+    core.addColorStop(1, "rgba(" + b.hue + ", 0)");
+    ctx.fillStyle = core;
     ctx.beginPath();
-    ctx.fillStyle = "rgba(255,255,255," + Math.min(1, tw + 0.15) + ")";
-    ctx.arc(px, py, b.r, 0, Math.PI * 2);
+    ctx.arc(px, py, coreR * 2.2, 0, Math.PI * 2);
     ctx.fill();
-  }
-
-  function stepDust() {
-    for (var i = 0; i < dust.length; i++) {
-      var p = dust[i];
-      p.phase += 0.02;
-
-      if (mouse.active) {
-        var dx = mouse.x - p.x;
-        var dy = mouse.y - p.y;
-        var dist = Math.sqrt(dx * dx + dy * dy) || 1;
-        var R = 240;
-        if (dist < R) {
-          var f = (1 - dist / R);
-          var nx = dx / dist;
-          var ny = dy / dist;
-          // Inward pull, weakening near the center.
-          var pull = f * 0.55;
-          // Tangential swirl builds an orbit rather than a collapse.
-          var swirl = f * 0.85;
-          // Gentle outward pressure very close in, so it doesn't clump.
-          var push = dist < 46 ? (1 - dist / 46) * 0.7 : 0;
-          p.vx += nx * (pull - push) + (-ny) * swirl;
-          p.vy += ny * (pull - push) + (nx) * swirl;
-        }
-      }
-
-      // Shockwaves shove dust outward.
-      for (var w = 0; w < waves.length; w++) {
-        var wv = waves[w];
-        var wdx = p.x - wv.x;
-        var wdy = p.y - wv.y;
-        var wd = Math.sqrt(wdx * wdx + wdy * wdy) || 1;
-        if (Math.abs(wd - wv.r) < 34) {
-          var wf = (1 - Math.abs(wd - wv.r) / 34) * wv.life * 1.4;
-          p.vx += (wdx / wd) * wf;
-          p.vy += (wdy / wd) * wf;
-        }
-      }
-
-      p.vx *= 0.94;
-      p.vy *= 0.94;
-      // Cap speed.
-      var sp = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
-      if (sp > 6) { p.vx = (p.vx / sp) * 6; p.vy = (p.vy / sp) * 6; }
-      p.x += p.vx + Math.cos(p.phase) * 0.08;
-      p.y += p.vy + Math.sin(p.phase * 0.8) * 0.08;
-
-      if (p.x < -30) p.x = width + 30;
-      if (p.x > width + 30) p.x = -30;
-      if (p.y < -30) p.y = height + 30;
-      if (p.y > height + 30) p.y = -30;
-
-      var alpha = 0.35 + Math.sin(p.phase) * 0.2 + Math.min(0.35, sp * 0.06);
-      var glow = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 3.2);
-      glow.addColorStop(0, "rgba(" + p.hue + "," + alpha + ")");
-      glow.addColorStop(1, "rgba(" + p.hue + ", 0)");
-      ctx.fillStyle = glow;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r * 3.2, 0, Math.PI * 2);
-      ctx.fill();
-    }
   }
 
   function stepComets() {
@@ -289,24 +244,44 @@
     }
   }
 
-  function stepWaves() {
-    for (var i = waves.length - 1; i >= 0; i--) {
-      var w = waves[i];
-      w.r += 9;
-      w.life -= 0.02;
-      if (w.life <= 0) { waves.splice(i, 1); continue; }
-      ctx.strokeStyle = "rgba(143, 176, 255," + (w.life * 0.5) + ")";
-      ctx.lineWidth = 2;
+  function stepClickFx() {
+    for (var i = clickFx.length - 1; i >= 0; i--) {
+      var fx = clickFx[i];
+      fx.width += 18;
+      fx.life -= 0.03;
+      if (fx.life <= 0) { clickFx.splice(i, 1); continue; }
+      var halfW = fx.width;
+      var flare = ctx.createLinearGradient(fx.x - halfW, fx.y, fx.x + halfW, fx.y);
+      flare.addColorStop(0, "rgba(" + fx.hue + ", 0)");
+      flare.addColorStop(0.45, "rgba(" + fx.hue + "," + (fx.life * 0.35) + ")");
+      flare.addColorStop(0.5, "rgba(255,255,255," + (fx.life * 0.85) + ")");
+      flare.addColorStop(0.55, "rgba(" + fx.hue + "," + (fx.life * 0.35) + ")");
+      flare.addColorStop(1, "rgba(" + fx.hue + ", 0)");
+      ctx.strokeStyle = flare;
+      ctx.lineWidth = 2.5;
+      ctx.lineCap = "round";
       ctx.beginPath();
-      ctx.arc(w.x, w.y, w.r, 0, Math.PI * 2);
+      ctx.moveTo(fx.x - halfW, fx.y);
+      ctx.lineTo(fx.x + halfW, fx.y);
       ctx.stroke();
-
-      var g = ctx.createRadialGradient(w.x, w.y, w.r * 0.6, w.x, w.y, w.r);
-      g.addColorStop(0, "rgba(183, 157, 255, 0)");
-      g.addColorStop(1, "rgba(183, 157, 255," + (w.life * 0.12) + ")");
-      ctx.fillStyle = g;
+      // Soft vertical crossbar, shorter.
+      var vHalf = halfW * 0.22;
+      var vFlare = ctx.createLinearGradient(fx.x, fx.y - vHalf, fx.x, fx.y + vHalf);
+      vFlare.addColorStop(0, "rgba(" + fx.hue + ", 0)");
+      vFlare.addColorStop(0.5, "rgba(255,255,255," + (fx.life * 0.45) + ")");
+      vFlare.addColorStop(1, "rgba(" + fx.hue + ", 0)");
+      ctx.strokeStyle = vFlare;
+      ctx.lineWidth = 1.4;
       ctx.beginPath();
-      ctx.arc(w.x, w.y, w.r, 0, Math.PI * 2);
+      ctx.moveTo(fx.x, fx.y - vHalf);
+      ctx.lineTo(fx.x, fx.y + vHalf);
+      ctx.stroke();
+      var flash = ctx.createRadialGradient(fx.x, fx.y, 0, fx.x, fx.y, 22);
+      flash.addColorStop(0, "rgba(255,255,255," + (fx.life * 0.7) + ")");
+      flash.addColorStop(1, "rgba(" + fx.hue + ", 0)");
+      ctx.fillStyle = flash;
+      ctx.beginPath();
+      ctx.arc(fx.x, fx.y, 22, 0, Math.PI * 2);
       ctx.fill();
     }
   }
@@ -353,10 +328,9 @@
     ctx.globalCompositeOperation = "lighter";
     drawStars();
     for (var i = 0; i < beacons.length; i++) drawBeacon(beacons[i]);
-    stepDust();
     stepTrail();
     stepComets();
-    stepWaves();
+    stepClickFx();
     ctx.globalCompositeOperation = "source-over";
   }
 
@@ -561,8 +535,7 @@
   });
   window.addEventListener("pointermove", onPointerMove, { passive: true });
   window.addEventListener("pointerdown", onPointerDown, { passive: true });
-  window.addEventListener("blur", onPointerLeave);
-  document.addEventListener("mouseleave", onPointerLeave);
+
   raf = window.requestAnimationFrame(step);
 
   document.addEventListener("visibilitychange", function () {
