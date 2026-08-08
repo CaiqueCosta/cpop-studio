@@ -1,20 +1,20 @@
-/* CPoP Studio — Starlight */
+/* CPoP Studio — Chrome */
 :root {
-  --bg: #05060f;
-  --bg-deep: #02030a;
-  --ink: #eef1fb;
-  --muted: #9096c4;
-  --line: rgba(180, 194, 255, 0.12);
-  --line-bright: rgba(180, 194, 255, 0.28);
-  --pop: #8fb0ff;
-  --pop-cyan: #7fe7ff;
-  --pop-violet: #b79dff;
-  --pop-ink: #05060f;
-  --glow: rgba(143, 176, 255, 0.55);
+  --bg: #010104;
+  --bg-deep: #000000;
+  --ink: #e9eefb;
+  --muted: #8790a8;
+  --line: rgba(255, 255, 255, 0.12);
+  --line-bright: rgba(255, 255, 255, 0.26);
+  --pop: #7aa2ff;
+  --pop-soft: #b9cdff;
+  --pop-ink: #0a1020;
+  --panel: rgba(6, 9, 20, 0.66);
+  --panel-hover: rgba(1, 2, 7, 0.92);
   --max: 56rem;
-  --font-display: "Futura", "Century Gothic", "Avenir Next", "Questrial", "Trebuchet MS", sans-serif;
-  --font-body: "IBM Plex Sans", "Helvetica Neue", sans-serif;
-  --font-serif: "Newsreader", "Iowan Old Style", Georgia, serif;
+  --font-display: "Michroma", "Helvetica Neue", sans-serif;
+  --font-body: "Sora", "Helvetica Neue", sans-serif;
+  --font-serif: "Sora", "Helvetica Neue", sans-serif;
 }
 
 *,
@@ -34,13 +34,13 @@ body {
   min-height: 100vh;
   color: var(--ink);
   font-family: var(--font-body);
-  font-size: 1.02rem;
+  font-size: 0.98rem;
   line-height: 1.55;
   background:
-    radial-gradient(60% 45% at 18% 12%, rgba(123, 92, 255, 0.20), transparent 60%),
-    radial-gradient(55% 45% at 85% 22%, rgba(79, 214, 255, 0.14), transparent 62%),
-    radial-gradient(70% 55% at 62% 108%, rgba(255, 110, 199, 0.12), transparent 60%),
-    radial-gradient(120% 90% at 50% 50%, transparent 55%, rgba(2, 3, 10, 0.85)),
+    radial-gradient(60% 45% at 18% 12%, rgba(123, 92, 255, 0.025), transparent 60%),
+    radial-gradient(55% 45% at 85% 22%, rgba(79, 214, 255, 0.018), transparent 62%),
+    radial-gradient(70% 55% at 62% 108%, rgba(255, 110, 199, 0.015), transparent 60%),
+    radial-gradient(120% 90% at 50% 50%, transparent 45%, rgba(0, 0, 0, 0.97)),
     linear-gradient(180deg, var(--bg) 0%, var(--bg-deep) 100%);
   background-color: var(--bg-deep);
   background-attachment: fixed;
@@ -79,19 +79,19 @@ body {
   cursor: grab;
   touch-action: none;
   filter:
-    drop-shadow(0 0 10px rgba(143, 176, 255, 0.45))
-    drop-shadow(0 8px 16px rgba(20, 14, 50, 0.6));
+    drop-shadow(0 0 4px rgba(143, 176, 255, 0.18))
+    drop-shadow(0 6px 12px rgba(20, 14, 50, 0.45));
   will-change: transform;
 }
 
 .soda-can::before {
   content: "";
   position: absolute;
-  inset: -55%;
+  inset: -35%;
   z-index: -1;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(143, 176, 255, 0.28), rgba(183, 157, 255, 0.10) 45%, transparent 70%);
-  opacity: 0.9;
+  background: radial-gradient(circle, rgba(143, 176, 255, 0.12), rgba(183, 157, 255, 0.04) 45%, transparent 70%);
+  opacity: 0.55;
   animation: aura-pulse 4.5s ease-in-out infinite;
 }
 
@@ -104,20 +104,20 @@ body {
 
 .soda-can:hover {
   filter:
-    drop-shadow(0 0 16px rgba(183, 210, 255, 0.6))
-    drop-shadow(0 8px 18px rgba(20, 14, 50, 0.6));
+    drop-shadow(0 0 7px rgba(183, 210, 255, 0.28))
+    drop-shadow(0 6px 14px rgba(20, 14, 50, 0.5));
 }
 
 .soda-can.is-dragging {
   cursor: grabbing;
   filter:
-    drop-shadow(0 0 22px rgba(200, 200, 255, 0.75))
-    drop-shadow(0 10px 22px rgba(20, 14, 50, 0.7));
+    drop-shadow(0 0 10px rgba(200, 200, 255, 0.35))
+    drop-shadow(0 8px 16px rgba(20, 14, 50, 0.55));
 }
 
 @keyframes aura-pulse {
-  0%, 100% { opacity: 0.55; transform: scale(0.92); }
-  50% { opacity: 1; transform: scale(1.06); }
+  0%, 100% { opacity: 0.35; transform: scale(0.94); }
+  50% { opacity: 0.6; transform: scale(1.02); }
 }
 
 body > *:not(.particle-field):not(.soda-can) {
@@ -164,23 +164,23 @@ a:hover {
   text-decoration: none;
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: 1.35rem;
-  letter-spacing: 0.08em;
+  font-size: 0.82rem;
+  letter-spacing: 0.2em;
   line-height: 1;
-  text-shadow: 0 0 18px rgba(143, 176, 255, 0.35);
-  transition: text-shadow 0.2s ease;
+  text-transform: uppercase;
+  transition: color 0.2s ease;
 }
 
 .brand:hover {
-  color: var(--ink);
-  text-shadow: 0 0 24px rgba(143, 176, 255, 0.7);
+  color: var(--pop-soft);
 }
 
 .brand-inline {
   font-family: var(--font-display);
   font-weight: 400;
-  letter-spacing: 0.06em;
-  font-size: 1.05em;
+  font-size: 0.8em;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
 }
 
 .nav-links {
@@ -189,18 +189,17 @@ a:hover {
   list-style: none;
   margin: 0;
   padding: 0;
-  font-size: 0.88rem;
+  font-size: 0.85rem;
 }
 
 .nav-links a {
   color: var(--muted);
   text-decoration: none;
-  transition: color 0.15s ease, text-shadow 0.15s ease;
+  transition: color 0.2s ease;
 }
 
 .nav-links a:hover {
-  color: var(--ink);
-  text-shadow: 0 0 14px rgba(143, 176, 255, 0.55);
+  color: var(--pop);
 }
 
 /* Home */
@@ -219,7 +218,7 @@ a:hover {
 
 .home-stage .wrap {
   display: grid;
-  gap: 3.25rem;
+  gap: 3.75rem;
   width: min(100% - 2.5rem, 72rem);
 }
 
@@ -230,136 +229,59 @@ a:hover {
   animation: settle 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-/* Slowly rotating orbital rings behind the wordmark */
-.home-brand::before,
-.home-brand::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  border-radius: 50%;
-  border: 1px solid rgba(143, 176, 255, 0.16);
-  pointer-events: none;
-  z-index: 0;
-  -webkit-mask-image: radial-gradient(closest-side, transparent 78%, #000 80%, #000 90%, transparent 100%);
-  mask-image: radial-gradient(closest-side, transparent 78%, #000 80%, #000 90%, transparent 100%);
-}
-
-.home-brand::before {
-  width: min(40rem, 92vw);
-  aspect-ratio: 1;
-  transform: translate(-50%, -50%) rotate(0deg);
-  animation: orbit-spin 46s linear infinite;
-}
-
-.home-brand::after {
-  width: min(26rem, 68vw);
-  aspect-ratio: 1;
-  border-color: rgba(183, 157, 255, 0.18);
-  transform: translate(-50%, -50%) rotate(0deg);
-  animation: orbit-spin 32s linear infinite reverse;
-}
-
-@keyframes orbit-spin {
-  to { transform: translate(-50%, -50%) rotate(360deg); }
-}
-
 .home-brand h1 {
   position: relative;
   z-index: 2;
   margin: 0;
   width: 100%;
   font-family: var(--font-display);
-  font-size: clamp(3rem, 11vw, 8rem);
+  font-size: clamp(1.4rem, 5.2vw, 3.6rem);
   font-weight: 400;
-  line-height: 0.95;
-  letter-spacing: 0.03em;
+  line-height: 1.15;
+  letter-spacing: 0.02em;
   white-space: nowrap;
-  color: transparent;
-  filter: drop-shadow(0 0 26px rgba(143, 176, 255, 0.35));
+  color: var(--ink);
 }
 
-/* Deep-violet extruded base, like a sign lit from within */
-.home-brand h1::before {
-  content: attr(data-text);
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  transform: translate(0.04em, 0.06em);
-  color: #2a2360;
-  -webkit-text-fill-color: #2a2360;
-  text-shadow:
-    0 0.016em 0 #1b1846,
-    0 0.06em 0.18em rgba(0, 0, 0, 0.6);
-}
-
-/* Starlight metallic fill */
+/* Brushed-metal wordmark: one plain vertical silver, no colour bands */
 .home-brand .fizzy-text {
   position: relative;
   z-index: 2;
-  background: linear-gradient(
-    180deg,
-    #ffffff 0%,
-    #dfe8ff 26%,
-    #b7c8ff 52%,
-    #8ea6ee 74%,
-    #cbd6ff 100%
-  );
+  background: linear-gradient(180deg, #ffffff 0%, #d7deef 52%, #9fadc9 100%);
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
   -webkit-text-fill-color: transparent;
 }
 
-/* Specular starlight glint sweeping across the letters */
-.home-brand h1::after {
-  content: attr(data-text);
-  position: absolute;
-  inset: 0;
-  z-index: 3;
-  color: transparent;
-  -webkit-text-fill-color: transparent;
-  background-image: linear-gradient(
-    105deg,
-    transparent 30%,
-    rgba(255, 255, 255, 0) 42%,
-    rgba(255, 255, 255, 0.9) 50%,
-    rgba(200, 224, 255, 0.4) 56%,
-    transparent 68%
-  );
-  background-size: 260% 100%;
-  background-position: 180% 0;
-  background-clip: text;
-  -webkit-background-clip: text;
-  animation: star-glint 6.5s ease-in-out infinite;
+.home-catalog {
+  display: grid;
+  gap: 1.5rem;
+  width: min(100%, 44rem);
+  margin-inline: auto;
+  animation: settle 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.08s both;
 }
 
-@keyframes star-glint {
-  0% { background-position: 180% 0; }
-  55%, 100% { background-position: -80% 0; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .home-brand::before,
-  .home-brand::after { animation: none; }
-  .home-brand h1::after { animation: none; }
-  .soda-can::before { animation: none; }
+@media (min-width: 760px) {
+  .home-catalog {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
 }
 
 .home-apps {
   position: relative;
   z-index: 2;
-  width: min(100%, 28rem);
-  margin-inline: auto;
-  animation: settle 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.08s both;
+  width: 100%;
 }
 
 .home-apps-label {
-  margin: 0 0 0.85rem;
+  margin: 0 0 0.8rem;
   color: var(--muted);
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.24em;
+  font-family: var(--font-display);
+  font-size: 0.6rem;
+  font-weight: 400;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   text-align: center;
 }
@@ -372,25 +294,49 @@ a:hover {
 
 .apps-list a {
   display: grid;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: 1rem;
+  margin-bottom: 0.7rem;
+  padding: 1.05rem 1.15rem;
   color: inherit;
   text-decoration: none;
+  border: 1px solid var(--line);
+  border-radius: 1.1rem;
+  background: var(--panel);
+  backdrop-filter: blur(12px);
+  transition: background 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
 }
 
-.apps-list a:hover {
+/* The panel holds still and catches the light: it sinks darker, the top edge
+   picks up a highlight. No colour — just the bevel. Only the arrow moves. */
+.apps-list a:hover,
+.apps-list a:focus-visible {
   color: inherit;
+  outline: none;
+  background: var(--panel-hover);
+  border-color: var(--line);
+  border-top-color: rgba(255, 255, 255, 0.5);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.5);
 }
 
-.apps-list a:hover .app-name {
-  color: var(--pop);
-  text-shadow: 0 0 16px rgba(143, 176, 255, 0.5);
+.apps-list a:focus-visible {
+  border-color: rgba(255, 255, 255, 0.6);
 }
 
 .apps-list img {
   width: 3.4rem;
   height: 3.4rem;
-  border-radius: 0.85rem;
+  border-radius: 0.9rem;
+  box-shadow: 0 0 0 1px var(--line);
+  transition: box-shadow 0.22s ease;
+}
+
+.apps-list a:hover img,
+.apps-list a:focus-visible img {
+  box-shadow: 0 0 0 1px var(--line-bright);
 }
 
 .app-copy {
@@ -402,10 +348,9 @@ a:hover {
 
 .app-name {
   font-family: var(--font-body);
-  font-size: 1.05rem;
+  font-size: 1rem;
   font-weight: 600;
-  letter-spacing: -0.01em;
-  transition: color 0.15s ease, text-shadow 0.15s ease;
+  letter-spacing: 0.01em;
 }
 
 .app-blurb,
@@ -416,74 +361,13 @@ a:hover {
 .app-arrow {
   color: var(--muted);
   font-size: 1.1rem;
-  transition: transform 0.2s ease, color 0.2s ease, text-shadow 0.2s ease;
+  transition: transform 0.22s ease, color 0.22s ease;
 }
 
-.apps-list a:hover .app-arrow {
-  color: var(--pop-cyan);
-  transform: translateX(5px);
-  text-shadow: 0 0 14px rgba(127, 231, 255, 0.7);
-}
-
-/* List row — constellation entries */
-.home-apps[data-layout="list"] {
-  width: min(100%, 28rem);
-}
-
-.home-apps[data-layout="list"] .apps-list {
-  border-top: 1px solid var(--line);
-}
-
-.home-apps[data-layout="list"] .apps-list a {
-  position: relative;
-  grid-template-columns: auto 1fr auto;
-  padding: 1rem 0.9rem;
-  border-bottom: 1px solid var(--line);
-  border-radius: 0.9rem;
-  transition: background 0.2s ease, box-shadow 0.2s ease;
-}
-
-.home-apps[data-layout="list"] .apps-list a::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 50%;
-  width: 2px;
-  height: 0;
-  transform: translateY(-50%);
-  border-radius: 2px;
-  background: linear-gradient(180deg, var(--pop-cyan), var(--pop-violet));
-  box-shadow: 0 0 12px rgba(143, 176, 255, 0.7);
-  transition: height 0.2s ease;
-}
-
-.home-apps[data-layout="list"] .apps-list a:hover {
-  background: linear-gradient(90deg, rgba(143, 176, 255, 0.10), transparent 70%);
-  box-shadow: inset 0 0 0 1px rgba(143, 176, 255, 0.18);
-}
-
-.home-apps[data-layout="list"] .apps-list a:hover::before {
-  height: 56%;
-}
-
-.home-apps[data-layout="list"] img {
-  border-radius: 0.85rem;
-  box-shadow:
-    0 0 0 1px rgba(143, 176, 255, 0.22),
-    0 6px 18px rgba(10, 8, 30, 0.55);
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
-}
-
-.home-apps[data-layout="list"] .apps-list a:hover img {
-  transform: translateY(-1px);
-  box-shadow:
-    0 0 0 1px rgba(143, 176, 255, 0.5),
-    0 0 22px rgba(143, 176, 255, 0.35),
-    0 6px 18px rgba(10, 8, 30, 0.55);
-}
-
-.home-apps[data-layout="list"] .app-blurb {
-  display: none;
+.apps-list a:hover .app-arrow,
+.apps-list a:focus-visible .app-arrow {
+  color: var(--ink);
+  transform: translateX(4px);
 }
 
 @keyframes settle {
@@ -499,41 +383,56 @@ a:hover {
 
 /* App page */
 .app-hero {
-  padding: 3rem 0 2rem;
+  padding: 3.25rem 0 2.25rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: 1.1rem;
+  gap: 1.25rem;
 }
 
 .app-hero-icon {
   width: 6.5rem;
   height: 6.5rem;
-  border-radius: 1.35rem;
+  border-radius: 1.5rem;
   box-shadow:
-    0 0 0 1px rgba(143, 176, 255, 0.25),
-    0 0 34px rgba(143, 176, 255, 0.28),
-    0 12px 32px rgba(10, 8, 30, 0.55);
+    0 0 0 1px var(--line-bright),
+    0 12px 28px rgba(4, 8, 22, 0.55);
 }
 
 .app-hero h1 {
   margin: 0;
   width: 100%;
   font-family: var(--font-display);
-  font-size: clamp(2.6rem, 9vw, 5.5rem);
+  font-size: clamp(1.2rem, 4.4vw, 2.5rem);
   font-weight: 400;
-  line-height: 0.95;
-  letter-spacing: 0.03em;
+  line-height: 1.2;
+  letter-spacing: 0.02em;
   white-space: nowrap;
-  text-shadow: 0 0 30px rgba(143, 176, 255, 0.3);
 }
 
 .app-hero .lede {
   margin: 0;
-  max-width: 28rem;
+  max-width: 26rem;
   color: var(--muted);
-  font-size: 1.05rem;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.app-store-badge-link {
+  display: inline-flex;
+  line-height: 0;
+  transition: transform 0.2s ease;
+}
+
+.app-store-badge-link:hover {
+  transform: translateY(-2px);
+}
+
+.app-store-badge {
+  display: block;
+  height: 3.35rem;
+  width: auto;
 }
 
 .button-row {
@@ -547,38 +446,38 @@ a:hover {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.65rem 1.05rem;
-  border-radius: 999px;
+  padding: 0.7rem 1.2rem;
+  border-radius: 0.85rem;
   font-weight: 600;
-  font-size: 0.88rem;
+  font-size: 0.85rem;
   text-decoration: none;
   border: 1px solid transparent;
-  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 }
 
 .button-primary {
-  background: linear-gradient(135deg, #ffffff, #cdd9ff);
+  background: #e6ecfb;
   color: var(--pop-ink);
-  box-shadow: 0 0 22px rgba(143, 176, 255, 0.35);
 }
 
 .button-primary:hover {
-  background: linear-gradient(135deg, var(--pop-cyan), var(--pop-violet));
+  background: #ffffff;
   color: var(--pop-ink);
-  transform: translateY(-1px);
-  box-shadow: 0 0 30px rgba(143, 176, 255, 0.6);
+  transform: translateY(-2px);
 }
 
 .button-ghost {
-  background: rgba(143, 176, 255, 0.04);
+  background: var(--panel);
   color: var(--ink);
   border-color: var(--line-bright);
+  backdrop-filter: blur(12px);
 }
 
 .button-ghost:hover {
+  background: var(--panel-hover);
   border-color: var(--pop);
   color: var(--ink);
-  box-shadow: 0 0 20px rgba(143, 176, 255, 0.3);
+  transform: translateY(-2px);
 }
 
 .note {
@@ -601,7 +500,7 @@ a:hover {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 1.75rem 2.5rem;
+  gap: 1.5rem 2.5rem;
   margin: 0 0 2rem;
   padding: 1.5rem 0 0;
   list-style: none;
@@ -629,10 +528,10 @@ a:hover {
   place-items: center;
   width: 2.4rem;
   height: 2.4rem;
-  border-radius: 50%;
-  background: rgba(143, 176, 255, 0.14);
+  border-radius: 0.7rem;
+  background: var(--panel);
+  box-shadow: 0 0 0 1px var(--line);
   color: var(--pop);
-  box-shadow: 0 0 18px rgba(143, 176, 255, 0.25);
 }
 
 .fact-icon svg {
@@ -650,7 +549,7 @@ a:hover {
 
 .fact-text strong {
   color: var(--ink);
-  font-size: 0.95rem;
+  font-size: 0.92rem;
   font-weight: 600;
   line-height: 1.2;
 }
@@ -666,36 +565,46 @@ a:hover {
   padding: 2.4rem 0 0.7rem;
 }
 
+.page-title-icon {
+  width: 6rem;
+  height: 6rem;
+  margin-bottom: 1rem;
+  border-radius: 1.5rem;
+  box-shadow:
+    0 0 0 1px var(--line-bright),
+    0 12px 28px rgba(4, 8, 22, 0.55);
+}
+
 .page-title h1 {
   margin: 0 0 0.3rem;
   font-family: var(--font-display);
-  font-size: clamp(2rem, 6vw, 2.8rem);
+  font-size: clamp(1.1rem, 3.6vw, 1.8rem);
   font-weight: 400;
-  letter-spacing: 0.03em;
-  line-height: 1.05;
-  text-shadow: 0 0 24px rgba(143, 176, 255, 0.28);
+  letter-spacing: 0.04em;
+  line-height: 1.25;
+  text-transform: uppercase;
 }
 
 .page-title .meta {
   margin: 0;
   color: var(--muted);
-  font-size: 0.88rem;
+  font-size: 0.82rem;
 }
 
 .prose {
   padding: 0.35rem 0 3.25rem;
   max-width: 36rem;
   font-family: var(--font-serif);
-  font-size: 1.06rem;
-  line-height: 1.65;
+  font-size: 1rem;
+  line-height: 1.68;
 }
 
 .prose h2 {
   margin: 1.85rem 0 0.5rem;
-  font-family: var(--font-display);
-  font-size: 1.1rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0;
   color: var(--ink);
 }
 
@@ -717,15 +626,31 @@ a:hover {
   font-weight: 600;
 }
 
+/* Michroma is a display face — mid-sentence it just breaks the line rhythm */
+.prose .brand-inline {
+  font-family: var(--font-body);
+  font-size: inherit;
+  letter-spacing: 0.02em;
+  text-transform: none;
+}
+
 .prose a:not(.button) {
   color: var(--pop);
 }
 
 .faq details {
-  margin-bottom: 0.2rem;
-  padding: 0.8rem 0;
-  border-bottom: 1px solid var(--line);
+  margin-bottom: 0.5rem;
+  padding: 0.9rem 1.05rem;
+  border: 1px solid var(--line);
+  border-radius: 0.9rem;
+  background: var(--panel);
+  backdrop-filter: blur(12px);
   font-family: var(--font-body);
+  transition: border-color 0.2s ease;
+}
+
+.faq details:hover {
+  border-color: var(--line-bright);
 }
 
 .faq summary {
@@ -742,7 +667,7 @@ a:hover {
 .faq summary::after {
   content: "+";
   float: right;
-  color: var(--pop-cyan);
+  color: var(--pop);
   font-weight: 700;
 }
 
@@ -765,7 +690,7 @@ a:hover {
   padding: 1.35rem 0 1.85rem;
   border-top: 1px solid var(--line);
   color: var(--muted);
-  font-size: 0.82rem;
+  font-size: 0.78rem;
 }
 
 .site-footer .wrap {
@@ -779,12 +704,11 @@ a:hover {
 .site-footer a {
   color: var(--muted);
   text-decoration: none;
-  transition: color 0.15s ease, text-shadow 0.15s ease;
+  transition: color 0.2s ease;
 }
 
 .site-footer a:hover {
-  color: var(--ink);
-  text-shadow: 0 0 12px rgba(143, 176, 255, 0.5);
+  color: var(--pop);
 }
 
 .footer-links {
@@ -795,11 +719,20 @@ a:hover {
 
 @media (prefers-reduced-motion: reduce) {
   .home-brand,
+  .home-catalog,
   .home-apps {
     animation: none;
   }
 
-  .app-arrow {
+  .soda-can::before {
+    animation: none;
+  }
+
+  .apps-list a,
+  .apps-list img,
+  .app-arrow,
+  .button,
+  .app-store-badge-link {
     transition: none;
   }
 }
