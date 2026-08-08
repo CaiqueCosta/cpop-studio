@@ -22,8 +22,9 @@
     <div class="wrap site-nav">
       <a class="brand" href="../../index.html">CPoP Studio</a>
       <ul class="nav-links">
-        <li><a href="privacy.html">Privacy</a></li>
+        <li><a href="#release-notes">Release Notes</a></li>
         <li><a href="support.html">Support</a></li>
+        <li><a href="privacy.html">Privacy</a></li>
       </ul>
     </div>
   </header>
@@ -31,11 +32,17 @@
   <main class="wrap">
     <section class="app-hero">
       <img class="app-hero-icon" src="../../assets/apps/pinta-puzzle/icon.png" width="104" height="104" alt="Pinta Puzzle app icon">
-      <h1>Pinta Puzzle</h1>
+      <div class="app-title">
+        <h1>Pinta Puzzle</h1>
+        <p class="app-platform">Game · iPhone &amp; iPad</p>
+      </div>
       <p class="lede">Make a jigsaw from any photo. Play offline. Everything stays on your phone.</p>
-      <a class="app-store-badge-link" href="https://apps.apple.com/us/app/pinta-puzzle/id6790492781" target="_blank" rel="noopener noreferrer">
-        <img class="app-store-badge" src="../../assets/download-on-the-app-store.svg" width="160" height="54" alt="Download on the App Store">
-      </a>
+      <div class="app-cta">
+        <a class="app-store-badge-link" href="https://apps.apple.com/us/app/pinta-puzzle/id6790492781" target="_blank" rel="noopener noreferrer">
+          <img class="app-store-badge" src="../../assets/download-on-the-app-store.svg" width="160" height="54" alt="Download on the App Store">
+        </a>
+      </div>
+      <p class="note">Free on the App Store · iOS 17 or later</p>
       <div class="button-row">
         <a class="button button-ghost" href="support.html">Support</a>
         <a class="button button-ghost" href="privacy.html">Privacy</a>
@@ -80,19 +87,75 @@
         </span>
       </li>
     </ul>
+
+    <article class="prose">
+      <h2>What you can do</h2>
+      <ul>
+        <li><strong>Build</strong> a puzzle from any photo in your library, or take a new one with the camera.</li>
+        <li><strong>Solve</strong> by dragging pieces — correctly aligned neighbours snap into groups.</li>
+        <li><strong>Zoom</strong> with a pinch, pan with two fingers, and tap the eye button for a reference image.</li>
+        <li><strong>Rotate</strong> pieces with a tap when rotation is turned on, for a harder sit-down.</li>
+        <li><strong>Play offline</strong> — no account, no network, no interruptions.</li>
+      </ul>
+
+      <h2>Your photos stay yours</h2>
+      <p>
+        Photos you import or capture are processed and stored only on your device, in the app's private
+        storage. They are never uploaded to CPoP Studio or any cloud service we operate, and there are no
+        analytics or advertising SDKs in the app — see the <a href="privacy.html">Privacy Policy</a>.
+      </p>
+
+      <h2>Contact</h2>
+      <p>
+        <strong>Email:</strong> <a href="mailto:support@cpopstudio.com">support@cpopstudio.com</a><br>
+        <strong class="brand-inline">Studio:</strong> <a class="brand-inline" href="https://cpopstudio.com">CPoP Studio</a>
+      </p>
+    </article>
+
+    <section class="releases" id="release-notes" data-empty-message="Release notes are coming soon. Each App Store update will be listed here with what changed.">
+      <div class="releases-head">
+        <h2>Release notes</h2>
+        <p class="note">Every published version, newest first.</p>
+      </div>
+
+      <div class="releases-table-wrap">
+        <table class="releases-table">
+          <thead>
+            <tr>
+              <th scope="col">Version</th>
+              <th scope="col">Released</th>
+              <th scope="col">What changed</th>
+              <th scope="col">Get it</th>
+            </tr>
+          </thead>
+          <tbody data-releases-body>
+            <tr>
+              <td colspan="4" class="releases-empty">Loading release notes…</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <nav class="releases-pager" data-releases-pager hidden aria-label="Release notes pages">
+        <button type="button" class="button button-ghost" data-releases-prev>Newer</button>
+        <span class="note" data-releases-status></span>
+        <button type="button" class="button button-ghost" data-releases-next>Older</button>
+      </nav>
+    </section>
   </main>
 
   <footer class="site-footer">
     <div class="wrap">
       <p><span class="brand-inline">CPoP Studio</span> · 2026</p>
       <div class="footer-links">
-        <a href="privacy.html">Privacy</a>
         <a href="support.html">Support</a>
+        <a href="privacy.html">Privacy</a>
         <a href="mailto:support@cpopstudio.com">support@cpopstudio.com</a>
       </div>
     </div>
   </footer>
 
   <script src="../../particles.js"></script>
+  <script src="../../app-page.js"></script>
 </body>
 </html>

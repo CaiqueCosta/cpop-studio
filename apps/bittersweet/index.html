@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; form-action 'none'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; img-src 'self'; font-src 'self' https://fonts.gstatic.com; connect-src https://fonts.googleapis.com https://fonts.gstatic.com; media-src 'none'; object-src 'none'; frame-src 'none'; worker-src 'none'; manifest-src 'self'; upgrade-insecure-requests">
+  <meta name="referrer" content="no-referrer">
+  <title>Bittersweet — CPoP Studio</title>
+  <meta name="description" content="Bittersweet — an 8-bit retro music workstation for macOS. Compose on a piano roll, record from your keyboard, export WAV and MP3.">
+  <link rel="icon" href="../../assets/studio-mark.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Michroma&family=Sora:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body>
+  <div class="particle-field" aria-hidden="true">
+    <canvas id="particle-canvas"></canvas>
+  </div>
+
+  <header class="site-header">
+    <div class="wrap site-nav">
+      <a class="brand" href="../../index.html">CPoP Studio</a>
+      <ul class="nav-links">
+        <li><a href="#release-notes">Release Notes</a></li>
+        <li><a href="mailto:support@cpopstudio.com">Support</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="app-hero">
+      <img class="app-hero-icon" src="../../assets/apps/bittersweet/icon.png" width="104" height="104" alt="Bittersweet app icon">
+      <div class="app-title">
+        <h1>Bittersweet</h1>
+        <p class="app-platform">App · macOS</p>
+      </div>
+      <p class="lede">An 8-bit retro music workstation. Sketch a tune on the piano roll, play it back, and export it.</p>
+      <div class="app-cta">
+        <a class="button button-primary" href="https://caiquecosta.github.io/bittersweet_page/" target="_blank" rel="noopener noreferrer">Download Bittersweet</a>
+      </div>
+      <p class="note">Downloads and release notes live on the Bittersweet site · macOS 14 or later</p>
+      <div class="button-row">
+        <a class="button button-ghost" href="#release-notes">Release notes</a>
+        <a class="button button-ghost" href="mailto:support@cpopstudio.com">Support</a>
+      </div>
+    </section>
+
+    <ul class="facts">
+      <li>
+        <span class="fact-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="4.5" width="19" height="12.5" rx="1.8"/><path d="M1.5 20.5h21"/></svg>
+        </span>
+        <span class="fact-text">
+          <strong>Mac</strong>
+          <span>macOS 14 or later</span>
+        </span>
+      </li>
+      <li>
+        <span class="fact-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2.6l7.5 3v6.1c0 4.2-3 8-7.5 9.7-4.5-1.7-7.5-5.5-7.5-9.7V5.6z"/><path d="M8.6 12.1l2.4 2.4 4.4-4.8"/></svg>
+        </span>
+        <span class="fact-text">
+          <strong>Signed &amp; notarized</strong>
+          <span>Checked by Apple's notary service</span>
+        </span>
+      </li>
+      <li>
+        <span class="fact-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3.2v12.4"/><path d="M7.6 11.4L12 15.8l4.4-4.4"/><path d="M4.5 19.5h15"/></svg>
+        </span>
+        <span class="fact-text">
+          <strong>Direct download</strong>
+          <span>DMG or ZIP, updates built in</span>
+        </span>
+      </li>
+      <li>
+        <span class="fact-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.2"/><path d="M5.5 19.5c1.4-3.2 3.7-4.8 6.5-4.8s5.1 1.6 6.5 4.8"/><path d="M4 4l16 16"/></svg>
+        </span>
+        <span class="fact-text">
+          <strong>No account needed</strong>
+          <span>Nothing to sign up for</span>
+        </span>
+      </li>
+    </ul>
+
+    <article class="prose">
+      <h2>What you can do</h2>
+      <ul>
+        <li><strong>Compose</strong> by drawing and editing note events on a retro piano roll.</li>
+        <li><strong>Record</strong> ideas straight from the laptop keyboard, using <code>A S D F G H J K L ;</code>.</li>
+        <li><strong>Play back</strong> a timeline rendered through the same chiptune synthesis model as the export.</li>
+        <li><strong>Save</strong> projects as editable <code>.bs</code> files.</li>
+        <li><strong>Export</strong> finished sketches as WAV or MP3.</li>
+      </ul>
+
+      <h2>Installing</h2>
+      <p>
+        Open the DMG and drag Bittersweet to your Applications folder. The build is Developer ID signed
+        and notarized, so macOS will open it without a security prompt. Once installed, Bittersweet checks
+        for its own updates — new versions arrive in the app.
+      </p>
+
+      <h2>Contact</h2>
+      <p>
+        <strong>Email:</strong> <a href="mailto:support@cpopstudio.com">support@cpopstudio.com</a><br>
+        <strong class="brand-inline">Studio:</strong> <a class="brand-inline" href="https://cpopstudio.com">CPoP Studio</a>
+      </p>
+    </article>
+
+    <!-- Bittersweet ships from its own site, which already generates the
+         download links and release notes from GitHub Releases. Rather than copy
+         that here and let it drift, this section points at the source. -->
+    <section class="releases" id="release-notes">
+      <div class="releases-head">
+        <h2>Release notes</h2>
+        <p class="note">Every published version, newest first.</p>
+      </div>
+
+      <div class="releases-elsewhere">
+        <p>
+          Bittersweet's downloads and release notes are published on its own site, kept up to date
+          automatically with every release.
+        </p>
+        <div class="button-row">
+          <a class="button button-ghost" href="https://caiquecosta.github.io/bittersweet_page/release-notes.html" target="_blank" rel="noopener noreferrer">Read the release notes</a>
+          <a class="button button-ghost" href="https://caiquecosta.github.io/bittersweet_page/archive.html" target="_blank" rel="noopener noreferrer">Download archive</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p><span class="brand-inline">CPoP Studio</span> · 2026</p>
+      <div class="footer-links">
+        <a href="#release-notes">Release Notes</a>
+        <a href="mailto:support@cpopstudio.com">support@cpopstudio.com</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../particles.js"></script>
+</body>
+</html>
