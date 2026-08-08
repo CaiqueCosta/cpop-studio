@@ -241,6 +241,8 @@ a:hover {
   letter-spacing: 0.02em;
   white-space: nowrap;
   color: var(--ink);
+  /* Keeps the wordmark crisp where it sits on the galaxy's nucleus. */
+  filter: drop-shadow(0 0 14px rgba(2, 3, 10, 0.75));
 }
 
 /* Brushed-metal wordmark: one plain vertical silver, no colour bands */

@@ -42,6 +42,208 @@
     });
   }
 
+  // ---- Rotating galaxy -------------------------------------------------
+  // A spiral disc centred on the CPoP Studio wordmark. The dust is baked into
+  // a few offscreen layers once; each layer then spins at its own rate, so the
+  // inner disc leads the outer arms (differential rotation, the way a real one
+  // turns) for the cost of one drawImage per layer per frame.
+
+  var brandEl = document.querySelector(".home-brand h1");
+  var galaxy = null;
+  var galaxyCenter = { x: 0, y: 0, tx: 0, ty: 0, set: false };
+  var GALAXY_TILT = -0.34;   // how the disc's major axis lies across the screen
+  var GALAXY_SQUASH = 0.52;  // viewing angle: 1 = face on, 0 = edge on
+
+  function measureGalaxyCenter() {
+    var rect = brandEl && brandEl.getBoundingClientRect();
+    if (rect && rect.width) {
+      galaxyCenter.tx = rect.left + rect.width / 2;
+      galaxyCenter.ty = rect.top + rect.height / 2;
+    } else {
+      galaxyCenter.tx = width / 2;
+      galaxyCenter.ty = height * 0.42;
+    }
+    if (!galaxyCenter.set) {
+      galaxyCenter.x = galaxyCenter.tx;
+      galaxyCenter.y = galaxyCenter.ty;
+      galaxyCenter.set = true;
+    }
+  }
+
+  // Pre-rendered dust grain: one sprite per hue, stamped thousands of times.
+  function makeSprite(hue, soft) {
+    var size = 64;
+    var c = document.createElement("canvas");
+    c.width = size;
+    c.height = size;
+    var g = c.getContext("2d");
+    var grad = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+    if (soft) {
+      grad.addColorStop(0, "rgba(" + hue + ", 0.5)");
+      grad.addColorStop(0.4, "rgba(" + hue + ", 0.18)");
+      grad.addColorStop(1, "rgba(" + hue + ", 0)");
+    } else {
+      grad.addColorStop(0, "rgba(255, 255, 255, 1)");
+      grad.addColorStop(0.22, "rgba(" + hue + ", 0.85)");
+      grad.addColorStop(0.55, "rgba(" + hue + ", 0.24)");
+      grad.addColorStop(1, "rgba(" + hue + ", 0)");
+    }
+    g.fillStyle = grad;
+    g.fillRect(0, 0, size, size);
+    return c;
+  }
+
+  var grainSprites = null;
+  var hazeSprites = null;
+
+  function galaxyRadius() {
+    return Math.max(240, Math.min(Math.min(width, height) * 0.62, 620));
+  }
+
+  function buildGalaxy() {
+    if (!brandEl) return;
+    if (!grainSprites) {
+      grainSprites = starHues.map(function (h) { return makeSprite(h, false); });
+      hazeSprites = starHues.map(function (h) { return makeSprite(h, true); });
+    }
+
+    var maxR = galaxyRadius();
+    var half = maxR + 30;
+    var res = 0.65;                    // offscreen resolution vs CSS pixels
+    var pixels = Math.max(2, Math.round(half * 2 * res));
+    var arms = 2;
+    var twist = 0.44;                  // log-spiral tightness; lower = looser
+    var coreR = maxR * 0.17;
+
+    // Radius bands, innermost first. Each becomes one independently spinning
+    // layer; `share` splits the grain budget, `speed` is radians per frame.
+    var bands = [
+      { from: 0.00, to: 0.32, speed: 0.00092, share: 0.30 },
+      { from: 0.24, to: 0.58, speed: 0.00064, share: 0.29 },
+      { from: 0.48, to: 0.82, speed: 0.00044, share: 0.24 },
+      { from: 0.72, to: 1.00, speed: 0.00030, share: 0.17 }
+    ];
+
+    var budget = Math.round(Math.max(700, Math.min(1700, (width * height) / 1300)));
+    if (reduceMotion) budget = Math.round(budget * 0.7);
+    var layers = [];
+
+    for (var b = 0; b < bands.length; b++) {
+      var band = bands[b];
+      var layerCanvas = document.createElement("canvas");
+      layerCanvas.width = pixels;
+      layerCanvas.height = pixels;
+      var g = layerCanvas.getContext("2d");
+      g.setTransform(res, 0, 0, res, 0, 0);
+      g.translate(half, half);
+      g.globalCompositeOperation = "lighter";
+
+      var count = Math.round(budget * band.share);
+
+      // Nebular haze first, so the grains sit on top of their own glow.
+      var hazeCount = Math.max(6, Math.round(count * 0.06));
+      for (var h = 0; h < hazeCount; h++) {
+        placeGrain(g, band, maxR, coreR, arms, twist, b, true);
+      }
+      for (var i = 0; i < count; i++) {
+        placeGrain(g, band, maxR, coreR, arms, twist, b, false);
+      }
+
+      layers.push({
+        canvas: layerCanvas,
+        speed: band.speed,
+        angle: Math.random() * Math.PI * 2
+      });
+    }
+
+    galaxy = { layers: layers, half: half, maxR: maxR, coreR: coreR, builtAt: maxR };
+  }
+
+  // One dust grain (or haze puff) placed on a logarithmic spiral arm.
+  function placeGrain(g, band, maxR, coreR, arms, twist, bandIndex, isHaze) {
+    var t = Math.random();
+    var r = (band.from + (band.to - band.from) * t) * maxR;
+    var bulge = bandIndex === 0 && Math.random() < 0.45;
+
+    var theta;
+    if (bulge) {
+      // The core is a rounded bulge, not an arm: scatter it freely and pull it
+      // in tight so the wordmark sits inside a dense nucleus.
+      r = coreR * Math.pow(Math.random(), 1.6) * 1.5;
+      theta = Math.random() * Math.PI * 2;
+    } else {
+      var arm = (Math.random() * arms) | 0;
+      var spread = 0.17 + 0.7 * Math.pow(1 - r / maxR, 2);
+      theta =
+        arm * ((Math.PI * 2) / arms) +
+        Math.log(Math.max(r, coreR * 0.55) / coreR) / twist +
+        (Math.random() - 0.5) * spread;
+      r += (Math.random() - 0.5) * maxR * 0.05;
+    }
+
+    var depth = Math.min(1, r / maxR);
+    // Warm, crowded light in the nucleus cooling to blue and violet outward.
+    var hueIndex;
+    if (depth < 0.3) hueIndex = Math.random() < 0.45 ? 4 : 0;
+    else if (depth < 0.6) hueIndex = Math.random() < 0.5 ? 0 : 1;
+    else hueIndex = Math.random() < 0.55 ? 1 : (Math.random() < 0.6 ? 3 : 2);
+
+    var x = Math.cos(theta) * r;
+    var y = Math.sin(theta) * r;
+
+    if (isHaze) {
+      g.globalAlpha = 0.04 + Math.random() * 0.04;
+      var hs = maxR * (0.1 + Math.random() * 0.16);
+      g.drawImage(hazeSprites[hueIndex], x - hs / 2, y - hs / 2, hs, hs);
+      return;
+    }
+
+    var size = rand(1.6, 4.2) * (1 - depth * 0.3);
+    if (Math.random() < 0.03) size *= rand(2, 3.4); // occasional bright cluster
+    g.globalAlpha = (0.3 + Math.random() * 0.5) * (1 - depth * 0.3);
+    g.drawImage(grainSprites[hueIndex], x - size / 2, y - size / 2, size, size);
+  }
+
+  function drawGalaxy() {
+    if (!galaxy) return;
+    // Glide to the measured centre so entry animations and layout shifts never
+    // snap the disc sideways.
+    galaxyCenter.x += (galaxyCenter.tx - galaxyCenter.x) * 0.12;
+    galaxyCenter.y += (galaxyCenter.ty - galaxyCenter.y) * 0.12;
+    var cx = galaxyCenter.x + parallax.x * 16;
+    var cy = galaxyCenter.y + parallax.y * 16;
+    var half = galaxy.half;
+
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(GALAXY_TILT);
+    ctx.scale(1, GALAXY_SQUASH);
+
+    // Nucleus: a slow-breathing glow the wordmark sits on top of.
+    var pulse = reduceMotion ? 0 : Math.sin(Date.now() / 2600) * 0.06;
+    var glowR = galaxy.coreR * (2.6 + pulse);
+    var core = ctx.createRadialGradient(0, 0, 0, 0, 0, glowR);
+    core.addColorStop(0, "rgba(255, 248, 232, " + (0.34 + pulse) + ")");
+    core.addColorStop(0.22, "rgba(255, 226, 190, 0.16)");
+    core.addColorStop(0.55, "rgba(186, 196, 255, 0.06)");
+    core.addColorStop(1, "rgba(140, 170, 255, 0)");
+    ctx.fillStyle = core;
+    ctx.beginPath();
+    ctx.arc(0, 0, glowR, 0, Math.PI * 2);
+    ctx.fill();
+
+    for (var i = 0; i < galaxy.layers.length; i++) {
+      var layer = galaxy.layers[i];
+      ctx.save();
+      ctx.rotate(layer.angle);
+      ctx.drawImage(layer.canvas, -half, -half, half * 2, half * 2);
+      ctx.restore();
+      if (!reduceMotion) layer.angle += layer.speed;
+    }
+
+    ctx.restore();
+  }
+
   function starCount() {
     return Math.max(60, Math.min(220, Math.floor((width * height) / 7000)));
   }
@@ -123,6 +325,11 @@
     var bTarget = beaconCount();
     while (beacons.length < bTarget) beacons.push(makeBeacon());
     while (beacons.length > bTarget) beacons.pop();
+
+    measureGalaxyCenter();
+    // Rebaking the layers is not free, so only redo it when the disc would
+    // actually change size by a noticeable amount.
+    if (!galaxy || Math.abs(galaxyRadius() - galaxy.builtAt) > 24) buildGalaxy();
   }
 
   function onPointerMove(event) {
@@ -326,6 +533,7 @@
     parallax.y += (parallax.ty - parallax.y) * 0.05;
 
     ctx.globalCompositeOperation = "lighter";
+    drawGalaxy();
     drawStars();
     for (var i = 0; i < beacons.length; i++) drawBeacon(beacons[i]);
     stepTrail();
@@ -516,7 +724,12 @@
     placeCan();
   }
 
+  var frame = 0;
+
   function step() {
+    // Cheap re-sync: the wordmark drifts during its entry animation and after
+    // late layout shifts, and the disc should stay pinned to it.
+    if (frame++ % 30 === 0) measureGalaxyCenter();
     drawFrame();
     stepSoda();
     raf = window.requestAnimationFrame(step);
@@ -535,6 +748,12 @@
   });
   window.addEventListener("pointermove", onPointerMove, { passive: true });
   window.addEventListener("pointerdown", onPointerDown, { passive: true });
+  window.addEventListener("scroll", measureGalaxyCenter, { passive: true });
+
+  // The wordmark is set in a webfont, so its box moves once that lands.
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(measureGalaxyCenter);
+  }
 
   raf = window.requestAnimationFrame(step);
 
