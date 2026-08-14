@@ -472,6 +472,49 @@ a:hover {
   max-width: 30rem;
 }
 
+/* Auth redirect landing (email confirmation / recovery) */
+.auth-stage {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  padding: 1.5rem 0 3rem;
+}
+
+.auth-stage .app-hero {
+  width: 100%;
+  padding: 1.5rem 0 0;
+  animation: settle 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.auth-stage .app-hero h1 {
+  white-space: normal;
+}
+
+.auth-icon-wrap {
+  position: relative;
+}
+
+.auth-icon-badge {
+  position: absolute;
+  right: -0.35rem;
+  bottom: -0.35rem;
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: #e6ecfb;
+  color: var(--pop-ink);
+  box-shadow:
+    0 0 0 3px var(--bg-deep),
+    0 6px 16px rgba(4, 8, 22, 0.45);
+}
+
+.auth-icon-badge svg {
+  width: 1.05rem;
+  height: 1.05rem;
+}
+
 .button.is-disabled {
   color: var(--muted);
   border-color: var(--line);
@@ -995,7 +1038,8 @@ a:hover {
 @media (prefers-reduced-motion: reduce) {
   .home-brand,
   .home-catalog,
-  .home-apps {
+  .home-apps,
+  .auth-stage .app-hero {
     animation: none;
   }
 
