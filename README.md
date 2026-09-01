@@ -17,11 +17,13 @@ Then open [http://localhost:8080](http://localhost:8080).
 | App | Privacy Policy | Support |
 |-----|----------------|---------|
 | Pinta Puzzle | `https://cpopstudio.com/apps/pinta-puzzle/privacy.html` | `https://cpopstudio.com/apps/pinta-puzzle/support.html` |
-| Vessla | `https://cpopstudio.com/apps/vessla/privacy.html` | `https://cpopstudio.com/apps/vessla/support.html` |
+| Seabay | `https://cpopstudio.com/apps/seabay/privacy.html` | `https://cpopstudio.com/apps/seabay/support.html` |
 
-Vessla email confirmation / Auth redirect (set as the hosted Supabase **Site URL**, and add it under **Additional Redirect URLs**):
+Seabay email confirmation / Auth redirect (set as the hosted Supabase **Site URL**, and add it under **Additional Redirect URLs**):
 
-`https://cpopstudio.com/apps/vessla/confirmed.html`
+`https://cpopstudio.com/apps/seabay/confirmed.html`
+
+The previous path `https://cpopstudio.com/apps/vessla/confirmed.html` still redirects to the new URL.
 
 ## GitHub Pages
 

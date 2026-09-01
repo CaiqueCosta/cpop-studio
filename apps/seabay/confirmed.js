@@ -16,25 +16,25 @@
   }
 
   if (error) {
-    document.title = "Link expired — Vessla";
+    document.title = "Link expired — Seabay";
     titleEl.textContent = "Link expired";
-    ledeEl.textContent = "This confirmation link is invalid or has already been used. Open Vessla and request a new one.";
+    ledeEl.textContent = "This confirmation link is invalid or has already been used. Open Seabay and request a new one.";
     noteEl.textContent = "If you already confirmed this email, just sign in.";
     return;
   }
 
   if (type === "recovery") {
-    document.title = "Reset your password — Vessla";
+    document.title = "Reset your password — Seabay";
     titleEl.textContent = "You're verified";
-    ledeEl.textContent = "Open Vessla to choose a new password. If the app does not open, return to it from your home screen.";
-    noteEl.textContent = "This page can be closed once Vessla is open.";
+    ledeEl.textContent = "Open Seabay to choose a new password. If the app does not open, return to it from your home screen.";
+    noteEl.textContent = "This page can be closed once Seabay is open.";
     openEl.href = "com.caiquecosta.vessla://reset-password" + hash;
     return;
   }
 
   if (type === "email_change") {
-    document.title = "Email updated — Vessla";
+    document.title = "Email updated — Seabay";
     titleEl.textContent = "Email updated";
-    ledeEl.textContent = "Congratulations — your new email is authenticated. Open Vessla and sign in with that address.";
+    ledeEl.textContent = "Congratulations — your new email is authenticated. Open Seabay and sign in with that address.";
   }
 })();
