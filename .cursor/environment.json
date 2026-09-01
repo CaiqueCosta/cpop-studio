@@ -1,0 +1,16 @@
+{
+  "name": "CPoP Studio",
+  "ports": [
+    {
+      "name": "web",
+      "port": 8080
+    }
+  ],
+  "terminals": [
+    {
+      "name": "web",
+      "command": "python3 -m http.server 8080",
+      "description": "Serves the static CPoP Studio site at http://localhost:8080"
+    }
+  ]
+}
